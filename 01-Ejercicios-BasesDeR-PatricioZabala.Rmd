@@ -1,0 +1,327 @@
+---
+title: "01 - Ejercicios - Bases de R"
+output: 
+  html_notebook: 
+    toc: true
+---
+
+# Estudiante: PatricioZabala 
+
+Para realizar estos ejercicios use como referencia el documento "01-BasesDeR.Rmd".
+
+Resuelva estos ejercicios en este documento insertando los chuncks necesarios (cntrl + alt + i), luego de cada consigna. Agregue al nombre del archivo el suyo al final (01-Ejercicios-BasesDeR-SuNombreApellido.Rmd), y me lo envía por email.
+
+Cargue las librerías necesaria cuando las necesite, no lo haga al inicio de la actividad. Esto no es el modo habitual de trabajo, pero se pretende aquí que usted descubra cuándo necesita las librerías extra.
+
+# Tipos de datos (Numeric, character, logical, y varios tipos para fechas y tiempos)
+
+## Numeric
+
+-   Cree objetos de la clase numeric y verifique con class() y typeof().
+-   Averigüe cómo crear un objeto de la case integer.
+-   ¿Qué son los objetos pi y exp(1)?
+
+```{r}
+a <- 2
+a
+class (a)
+
+b <- 5.3
+b
+class(b)
+
+c <- 2/4
+c
+class(c)
+
+d <- 0.1
+d
+class(d)
+
+print(typeof(a))
+print(typeof(b))
+print(typeof(c))
+print(typeof(d))
+
+as.integer(b)
+
+pi #es una constante universal
+
+exp(1) #es una constante universal
+```
+
+## Character
+
+-   Cree tres objetos de texto y concaténelos de 3 maneras diferentes. Use los siguientes separadores: un espacio, un guión y sin espacio. Pruebe las funciones paste() y print(). ¿Qué las diferencia?
+
+```{r}
+f <- "p"
+f
+class(f)
+
+g <- "vocablo"
+g
+class(g)
+
+h <- "latino"
+h
+class(h)
+
+paste(f , g , h) #La funcion PASTE concatena elementos en una cadena
+class(paste (f , g , h))
+paste(f, g , h, sep = "-")
+paste0(f, g , h)
+```
+## Logical
+
+-   Cree las tablas de verdad para los conectores lógicos "y" y "o" y considere también las combinaciones de la negación de las proposiciones. Ponga atención en el orden de ejecución.
+
+```{r}
+A <- c(TRUE, TRUE, FALSE, FALSE)
+B <- c(TRUE, FALSE, TRUE, FALSE)
+
+Y <- A & B
+O <- A | B
+negacion_Y <- !(A & B)
+negacion_O <- !(A | B)
+
+tabla_verdad <- data.frame(A, B, Y, O, negacion_Y, negacion_O)
+
+print(tabla_verdad)
+```
+
+## Date and Time.
+
+-   ¿Qué día Juliano es su cumpleaños?
+-   ¿Cuántos días hay entre su último cumpleaños y hoy?
+-   ¿Cuántos días faltan para su próximo cumpleaños?
+-   ¿Cuánto tiempo ha transcurrido desde su nacimiento?
+-   ¿Cuánto tiempo vivió El Diego?
+-   ¿Qué día de la semana nació El Diego?
+-   ¿Qué semana del año murió El Diego?
+-   ¿Qué diferencia de edad tienen usted y El Diego?
+
+```{r}
+install.packages("lubridate")
+```
+
+```{r}
+library(lubridate)
+```
+
+```{r}
+fecha_nacimiento <- ymd("1981-02-05")
+
+dia_juliano <- yday(fecha_nacimiento)
+
+print(dia_juliano)
+
+ultimo_cumple <- as.Date("2025-02-05")
+hoy <- Sys.Date()
+diferencia_dias <- hoy - ultimo_cumple
+print(diferencia_dias)
+
+proximo_cumple <- as.Date("2026-02-05")
+dias_restantes <- proximo_cumple - hoy
+print(dias_restantes)
+
+dias_acumulados <- hoy - fecha_nacimiento
+print(dias_acumulados)
+
+nacimiento_Maradona <- ymd("1960-10-30")
+muerte_Maradona <-ymd("2020-11-24")
+dias_vividos <- muerte_Maradona - nacimiento_Maradona
+print(dias_vividos)
+
+dia_semana <- weekdays(nacimiento_Maradona)
+print(dia_semana)
+
+numero_semana <- isoweek(muerte_Maradona)
+print(numero_semana)
+```
+
+# Estructuras de datos
+
+## Vectores
+
+-   Cree un vector con los días julianos correspondientes a 50, 100, 150, 200, 250, 300 y 350 días después de su último cumpleaños.
+-   Cree un vector con los días de la semana (como palabras) corerspondientes a las fechas del inciso anterior.
+-   Cree un vector con las superficies correspondientes a 5 cuadrados. El primer cuadrado tiene lados de 1m de largo, el segundo tiene lados el doble de largos que el cuadrado anterior, el tercero el triple del cuadrado del doble del inicial... y así sigue la serie. (es decir: 1, 2 * 1, 3 * 2 * 1, ...)
+-   Cree un vector con los precios de 6 productos y otro con las cantidades vendidas de dichos productos. ¿Cuánto fué el ingreso total de las ventas?
+
+```{r}
+library(lubridate)
+
+fecha_inicial <- as.Date("2025-02-05")
+
+fecha_resultado <- fecha_inicial + c(50 , 100 , 150 , 200 , 250 , 300 , 350)
+print(fecha_resultado)
+
+dias_semana <- weekdays.Date(fecha_resultado)
+print(dias_semana)
+
+n_cuadrados <- 5
+
+lados <- factorial(1:n_cuadrados)
+
+superficies <- lados^2 
+
+print(superficies)
+
+precios_productos <- c(1500, 2500, 3500, 4500, 5500, 6500)
+ventas_productos <- c(25, 35, 45, 55, 65, 75)
+
+ingreso_ventas_por_producto <- precios_productos*ventas_productos
+
+total_ventas <- sum(ingreso_ventas_por_producto)
+print(total_ventas)
+```
+
+### Generador de secuencias
+
+-   Cree un vector de números del 21 al 354
+-   Cree un vector con una secuencia desde 0 hasta 700 saltando de a 7 usando la función seq()
+-   Cree el mismo vector anterior pero sin usar el método seq()
+
+```{r}
+vector_1 <- 21:354 
+print(vector_1)
+
+vector_2 <- seq(from= 0, to= 700, by= 7)
+print(vector_2)
+
+i <- 0:100
+
+vector_3 <- i*7
+print(vector_3)
+
+```
+
+
+### Acceder a los elementos de un vector
+
+-   ¿Cuál es la superficie del tercer cuadrado del ejercicio anterior?
+-   ¿Cuáles son los números desde el 5to al 9no de la serie que salta de a siete?
+-   Cree un vector que contenga las fechas correspondientes a los 100, 200 y 300 días posteriores a su último cumpleaños. No lo vuelva a calcular, rescate los valores del vector previamente creado.
+
+```{r}
+superficies[3]
+
+vector_2[5:9]
+
+dias_julianos <- c(50 , 100 , 150 , 200 , 250 , 300 , 350)
+solo_tres_fechas <- fecha_resultado[dias_julianos %in% c(100 , 200 , 300)]
+print(solo_tres_fechas)
+
+```
+
+## Matrices
+
+Usted es un comerciante que vende 7 productos en 3 sucursales diferentes.
+
+-   Cree un vector con los precios de compra mayorista de los 7 productos que luego venderá.
+-   Cree una matriz con los precios de venta de los 7 productos en las 3 sucursales diferentes.
+-   Cree una matriz con las ventas realizadas de los 7 productos anteriores en las 3 sucursales mencionadas.
+-   Cree una matriz, usando las anteriores, con la recaudación por producto y sucursal.
+-   Cree una matriz, usando las anteriores, con las ganancias por producto y por sucursal.
+
+```{r}
+precios_productos2 <- c(1500, 2500, 3500, 4500, 5500, 6500, 7500)
+
+ventas_suc1 <- c(10, 20, 30, 40, 50, 60, 70)
+ventas_suc2 <- c(5, 10, 15, 20, 25, 30, 35)
+ventas_suc3 <- c(2.5, 5, 7.5, 10, 12.5, 15, 17.5)
+
+ingresos_suc1 <- precios_productos2*ventas_suc1
+ingresos_suc2 <- precios_productos2*ventas_suc2
+ingresos_suc3 <- precios_productos2*ventas_suc3
+
+matriz_ventas <- cbind(ingresos_suc1, ingresos_suc2, ingresos_suc3)
+
+recaudacion_por_producto <- rowSums(matriz_ventas)
+recaudacion_por_sucursal <- colSums(matriz_ventas)
+
+matriz_con_columna_total <- cbind(matriz_ventas, total_producto= recaudacion_por_producto)
+matriz_con_fila_total <- rbind(matriz_con_columna_total, c(recaudacion_por_sucursal, sum(recaudacion_por_sucursal)))
+
+productos <- c(paste("Producto", 1:7), "Total por Sucursal")
+
+matriz_final <- data.frame("Producto"= productos, matriz_con_fila_total)
+
+ganancia_por_producto <- matriz_final$total_producto*0.40
+
+matriz_final$ganancia_por_producto <- ganancia_por_producto
+
+print(matriz_final)
+
+ganancia_por_sucursal <- matriz_final[8,2:4]*0.40
+
+total_general_ganancia <- matriz_final[8, "ganancia_por_producto"]
+
+fila_ganancia_sucursal <- c("Ganancia Sucursal (40%)", as.numeric(ganancia_por_sucursal), NA, total_general_ganancia)
+
+matriz_final_con_ganancia <- rbind(matriz_final, fila_ganancia_sucursal)
+
+colnames(matriz_final_con_ganancia) <- c("Producto","Ingresos Sucursal 1","Ingresos Sucursal 2","Ingresos Sucursal 3","Total por Producto","Ganancia Producto (40%)")
+
+
+print(matriz_final_con_ganancia)
+
+
+```
+
+### Acceder a sus elementos
+
+Para las matrices del ejemplo anterior:
+
+-   ¿Cuál fué la recaudación total?, ¿y la ganancia?
+-   ¿Cuál fué la recaudación en la sucursal 2?, ¿y la ganancia?
+-   ¿Cuál fué la recaudación del producto 6?, ¿y la ganancia?
+
+```{r}
+recaudacion_total <- matriz_final_con_ganancia[8, "Total por Producto"]
+print(recaudacion_total)
+
+ganancia_total <- matriz_final_con_ganancia[8, "Ganancia Producto (40%)"]
+print(ganancia_total)
+
+recaudacion_suc2 <- matriz_final_con_ganancia[8, "Ingresos Sucursal 2"]
+print(recaudacion_suc2)
+
+ganancia_suc2 <- matriz_final_con_ganancia[9, "Ingresos Sucursal 2"]
+print(ganancia_suc2)
+
+recaudacion_prod6 <- matriz_final_con_ganancia[6, "Total por Producto"]
+print(recaudacion_prod6)
+
+ganancia_prod6 <- matriz_final_con_ganancia[6, "Ganancia Producto (40%)"]
+print(ganancia_prod6)
+```
+## Array.
+
+-   Imagine una inflación mensual del 7% y construya un array con la información del ejercicio anterior agregándole toda esa misma información pero en el mes siguiente.
+
+### Acceder a sus elementos
+
+-   ¿Cuál fué la recaudación total y la ganancia en el mes siguiente?
+-   ¿Cuál fué la recaudación y la ganancia en la sucursal 3 en el primer mes?
+-   ¿Cuál fué la recaudación y la ganancia del producto 2 en los dos meses?
+
+## Estructuras de datos heterogéneos
+
+## Listas
+
+-   Cree una lista con nombres de sus elementos donde almacene precio de compra, precio de venta, ventas, recaudación y ganancias de los productos 3 y 5 en el segundo mes.
+
+### Acceder a sus elementos
+
+-   ¿Cuales fueron las ventas del producto 3? (obtenga la información de la lista anterior)
+
+# Funciones
+
+-   Cree una función que le permita acceder a las ganancias totales del producto que usted elija.
+-   Cree una función que le permita acceder a las ganancias totales de la sucursal que usted elija.
+-   Cree una función que le permita acceder a las ganancias totales de un producto en una sucursal.
+-   Guarde en un archivo externo las funciones creadas. Cárguelas luego y pruebe su funcionalidad. (Recomendación, a las funciones almacenadas aparte póngales un nombre diferente así puede probar si cargan correctamente sin conflicto con las creadas en este documento)
+
+
